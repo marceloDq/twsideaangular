@@ -1,57 +1,57 @@
 <!DOCTYPE html>
-<!-- Declares the root element that allows behaviour to be modified through Angular custom HTML tags. -->
+<!-- Declara o elemento raiz que permite que o comportamento a ser modificado por meio de tags HTML personalizados Angular. -->
 <html ng-app="persons">
 <head>
     <title>TWSIdeaAngular</title>
     
 	<meta charset="UTF-8">
 
-    <!-- build:css css/third-party.css -->
-    <!-- bower:css -->
     <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
 
-    <!-- build:css css/application.css -->
+    <!-- carrega:css css/aplicação.css -->
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <!-- endbuild -->
+    <!-- fimcarrega -->
 
-    <!-- build:js lib/third-party.js -->
-    <!-- bower:js -->
     <script src="lib/dependencies/jquery.min.js"></script>
     <script src="lib/dependencies/angular.min.js"></script>
     <script src="lib/dependencies/angular-resource.min.js"></script>
     <script src="lib/dependencies/ng-grid-2.0.11.min.js"></script>
     <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
 
-    <!-- build:js script/all.js -->
+    <!-- carrega:js script/all.js -->
     <script src="script/person.js"></script>
-    <!-- endbuild -->
+    <!-- fimcarrega -->
 </head>
 
 <body>
 
-<h1>TWSIdea - [Java 8 - AngularJS]</h1>
+<div class="navbar navbar-default navbar-static-top">
+<ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#">Menus</a></li>
+  <li role="presentation"><a href="#">Teste</a></li>
+  <li role="presentation"><a href="#">Contato</a></li>
+</ul>
+</div>
+
+ 
 
 <br/>
 
-<!-- Specify a Angular controller script that binds Javascript variables to the feedback messages.-->
+<!-- Especifique um script controlador angular que liga variáveis ​​JavaScript para as mensagens de feedback.-->
 <div class="message" ng-controller="alertMessagesController">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
 
 <br>
 
-<!-- Specify a Angular controller script that binds Javascript variables to the grid.-->
+<!-- Especifique um script controlador angular que liga variáveis ​​JavaScript para a lista.-->
 <div class="grid" ng-controller="personsListController">
     <div>
-        <h3>Lista Pessoas</h3>
+        <h3>Lista de Pessoas</h3>
     </div>
 
-    <!-- Binds the grid component to be displayed. -->
+    <!-- Binds o componente de rede a ser exibido  -->
     <div class="gridStyle" ng-grid="gridOptions"></div>
 
     <!--  Bind the pagination component to be displayed. -->
@@ -61,7 +61,7 @@
     </pagination>
 </div>
 
-<!-- Specify a Angular controller script that binds Javascript variables to the form.-->
+<!-- Especifique um script controlador angular que liga variáveis ​​JavaScript para o formulário.-->
 <div class="form" ng-controller="personsFormController">
     <!-- Verify person, if there is no id present, that we are Adding a Person -->
     <div ng-if="person.id == null">
@@ -73,29 +73,24 @@
     </div>
 
     <div>
-        <!-- Specify the function to be called on submit and disable HTML5 validation, since we're using Angular validation-->
+        <!-- Especifique a função a ser chamado em enviar e desativar a validação HTML5 , já que estamos usando a validação Angular-->
         <form name="personForm" ng-submit="updatePerson()" novalidate>
 
-            <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
             <div class="form-group" ng-class="{'has-error' : personForm.name.$invalid && personForm.name.$dirty}">
                 <label for="name">Nome:</label>
-                <!-- Display a check when the field is valid and was modified -->
                 <span ng-class="{'glyphicon glyphicon-ok' : personForm.name.$valid && personForm.name.$dirty}"></span>
 
                 <input id="name" name="name" type="text" class="form-control" maxlength="50"
                        ng-model="person.name"
                        required ng-minlength="2" ng-maxlength="50"/>
 
-                <!-- Validation messages to be displayed on required, minlength and maxlength -->
                 <p class="help-block" ng-show="personForm.name.$error.required">Adicionar Nome.</p>
                 <p class="help-block" ng-show="personForm.name.$error.minlength">O nome deve ter pelo menos 2 caracteres.</p>
                 <p class="help-block" ng-show="personForm.name.$error.maxlength">O nome não pode ter mais de 50 caracteres.</p>
             </div>
 
-            <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
             <div class="form-group" ng-class="{'has-error' : personForm.description.$invalid && personForm.description.$dirty}">
                 <label for="description">Descrição:</label>
-                <!-- Display a check when the field is valid and was modified -->
                 <span ng-class="{'glyphicon glyphicon-ok' : personForm.description.$valid && personForm.description.$dirty}"></span>
 
                 <input id="description" name="description" type="text" class="form-control" maxlength="100"
@@ -108,7 +103,6 @@
                 <p class="help-block" ng-show="personForm.description.$error.maxlength">A descrição não pode ser maior do que 100 caracteres.</p>
             </div>
 
-            <!-- Form buttons. The 'Save' button is only enabled when the form is valid. -->
             <div class="buttons">
                 <button type="button" class="btn btn-primary" ng-click="clearForm()">Cancelar</button>
                 <button type="submit" class="btn btn-primary" ng-disabled="personForm.$invalid">Salvar</button>

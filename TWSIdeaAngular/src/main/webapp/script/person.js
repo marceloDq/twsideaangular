@@ -1,8 +1,8 @@
 var app = angular.module('persons', ['ngResource', 'ngGrid', 'ui.bootstrap']);
 
-// Create a controller with name personsListController to bind to the grid section.
+// Criar um controlador com o nome personsListController de se ligar à secção de lista
 app.controller('personsListController', function ($scope, $rootScope, personService) {
-    // Initialize required information: sorting, the first page to show and the grid options.
+    // Inicializar informações necessárias: a classificação , a primeira página para mostrar e as opções de lista.
     $scope.sortInfo = {fields: ['id'], directions: ['asc']};
     $scope.persons = {currentPage: 1};
 
@@ -20,7 +20,7 @@ app.controller('personsListController', function ($scope, $rootScope, personServ
 
         multiSelect: false,
         selectedItems: [],
-        // Broadcasts an event when a row is selected, to signal the form that it needs to load the row data.
+        // Broadcasts um evento quando uma linha é selecionada, para assinalar a forma que ele precisa para carregar os dados da linha .
         afterSelectionChange: function (rowItem) {
             if (rowItem.selected) {
                 $rootScope.$broadcast('personSelected', $scope.gridOptions.selectedItems[0].id);
@@ -28,7 +28,7 @@ app.controller('personsListController', function ($scope, $rootScope, personServ
         }
     };
 
-    // Refresh the grid, calling the appropriate rest method.
+    // Atualize o grid, chamando o método descanso adequado .
     $scope.refreshGrid = function () {
         var listPersonsArgs = {
             page: $scope.persons.currentPage,
@@ -41,104 +41,104 @@ app.controller('personsListController', function ($scope, $rootScope, personServ
         })
     };
 
-    // Broadcast an event when an element in the grid is deleted. No real deletion is perfomed at this point.
+    // Broadcast um evento quando um elemento da rede é eliminado . Não há qualquer supressão real é perfomed neste momento.
     $scope.deleteRow = function (row) {
         $rootScope.$broadcast('deletePerson', row.entity.id);
     };
 
-    // Watch the sortInfo variable. If changes are detected than we need to refresh the grid.
-    // This also works for the first page access, since we assign the initial sorting in the initialize section.
+    // Assista a variável SortInfo . Se forem detectadas alterações do que precisamos para atualizar a grade.
+    // Isso também funciona para o primeiro acesso à página , uma vez que nós atribuímos a triagem inicial na seção initialize .
     $scope.$watch('sortInfo.fields[0]', function () {
         $scope.refreshGrid();
     }, true);
 
-    // Do something when the grid is sorted.
-    // The grid throws the ngGridEventSorted that gets picked up here and assigns the sortInfo to the scope.
-    // This will allow to watch the sortInfo in the scope for changed and refresh the grid.
+    // Faça alguma coisa quando a grade está classificada.
+    // A lista lança o ngGridEventSorted que se apanhada aqui e atribui o SortInfo ao alcance .
+    // Isto irá permitir a assistir o SortInfo no âmbito alterada e para actualizar a lista.
     $scope.$on('ngGridEventSorted', function (event, sortInfo) {
         $scope.sortInfo = sortInfo;
     });
 
-    // Picks the event broadcasted when a person is saved or deleted to refresh the grid elements with the most
-    // updated information.
+    // Escolhas do evento transmitido quando uma pessoa é salva ou suprimido para atualizar os elementos da rede com a mais
+    // informações atualizadas.
     $scope.$on('refreshGrid', function () {
         $scope.refreshGrid();
     });
 
-    // Picks the event broadcasted when the form is cleared to also clear the grid selection.
+    // Escolhas do evento transmitido quando o formulário é liberado para também limpar a seleção grid.
     $scope.$on('clear', function () {
         $scope.gridOptions.selectAll(false);
     });
 });
 
-// Create a controller with name personsFormController to bind to the form section.
+// Criar um controlador com nome personsFormController para ligar para a seção de formulário.
 app.controller('personsFormController', function ($scope, $rootScope, personService) {
-    // Clears the form. Either by clicking the 'Clear' button in the form, or when a successfull save is performed.
+    // Limpa o formulário. Ou clicando no botão "Limpar" na forma , ou quando um arquivo é salvo com sucesso .
     $scope.clearForm = function () {
         $scope.person = null;
-        // Resets the form validation state.
+        //Redefine o estado de validação de formulário
         $scope.personForm.$setPristine();
-        // Broadcast the event to also clear the grid selection.
+        // Broadcast o evento também para limpar a seleção grid.
         $rootScope.$broadcast('clear');
     };
 
-    // Calls the rest method to save a person.
+    // Chama o método descanso para salvar uma pessoa.
     $scope.updatePerson = function () {
         personService.save($scope.person).$promise.then(
             function () {
-                // Broadcast the event to refresh the grid.
+                //Transmitir o evento para atualizar a grade.
                 $rootScope.$broadcast('refreshGrid');
-                // Broadcast the event to display a save message.
+                // Broadcast o evento para exibir uma mensagem de salvamento .
                 $rootScope.$broadcast('personSaved');
                 $scope.clearForm();
             },
             function () {
-                // Broadcast the event for a server error.
+                // Broadcast o evento para um erro no servidor.
                 $rootScope.$broadcast('error');
             });
     };
 
-    // Picks up the event broadcasted when the person is selected from the grid and perform the person load by calling
-    // the appropiate rest service.
+    // Pega o evento transmitido quando a pessoa é seleccionado de entre a grade e realizar a carga pessoa chamando
+    // o serviço de descanso apropriado .
     $scope.$on('personSelected', function (event, id) {
         $scope.person = personService.get({id: id});
     });
 
-    // Picks us the event broadcasted when the person is deleted from the grid and perform the actual person delete by
-    // calling the appropiate rest service.
+    // Nos escolhe o evento transmitido quando a pessoa é excluída da rede e realizar a pessoa real por excluir
+    // Chamar o serviço de descanso apropriado .
     $scope.$on('deletePerson', function (event, id) {
         personService.delete({id: id}).$promise.then(
             function () {
-                // Broadcast the event to refresh the grid.
+                // Broadcast o evento para atualizar a grid
                 $rootScope.$broadcast('refreshGrid');
-                // Broadcast the event to display a delete message.
+                // Broadcast o evento para exibir uma mensagem de exclusão.
                 $rootScope.$broadcast('personDeleted');
                 $scope.clearForm();
             },
             function () {
-                // Broadcast the event for a server error.
+                // Broadcast o evento para um erro no servidor.
                 $rootScope.$broadcast('error');
             });
     });
 });
 
-// Create a controller with name alertMessagesController to bind to the feedback messages section.
+// Criar um controlador com nome alertMessagesController para ligar para a seção de mensagens de feedback .
 app.controller('alertMessagesController', function ($scope) {
-    // Picks up the event to display a saved message.
+    // Pega o evento para exibir uma mensagem gravada.
     $scope.$on('personSaved', function () {
         $scope.alerts = [
             { type: 'success', msg: 'Rigistro salvo com sucesso' }
         ];
     });
 
-    // Picks up the event to display a deleted message.
+    // Pega o evento para exibir uma mensagem excluída .
     $scope.$on('personDeleted', function () {
         $scope.alerts = [
             { type: 'success', msg: 'Registro deletado com sucesso' }
         ];
     });
 
-    // Picks up the event to display a server error message.
+    // Pega o evento para exibir uma mensagem de erro no servidor.
     $scope.$on('error', function () {
         $scope.alerts = [
             { type: 'danger', msg: 'Erro interno no servidor!' }
@@ -150,7 +150,7 @@ app.controller('alertMessagesController', function ($scope) {
     };
 });
 
-// Service that provides persons operations
+// Serviço que permite operações de pessoas
 app.factory('personService', function ($resource) {
     return $resource('resources/persons/:id');
 });

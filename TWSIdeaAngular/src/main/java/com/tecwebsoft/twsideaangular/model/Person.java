@@ -6,7 +6,6 @@ import javax.persistence.*;
  * @author Marcelo Lopes Nunes - TWS</br>
  * 		tecwebsoft.com.br - 05/03/2015</br>
  * 		<a href=malito:lopesnunnes@gmail.com>lopesnunnes@gmail.com</a>
- * 
  */
 @Entity
 public class Person {
