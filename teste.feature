@@ -1,0 +1,9 @@
+@teste  
+Feature: Teste  
+
+  Testando Feature.
+
+  Scenario: Test
+    Given ...
+    When ...
+    Then ...
