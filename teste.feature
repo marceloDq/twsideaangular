@@ -5,5 +5,5 @@ Feature: Teste
 
   Scenario: Testan
     Given eu estou na análise de vínculos
-    When ...
+    When teste aaaaa
     Then ...
